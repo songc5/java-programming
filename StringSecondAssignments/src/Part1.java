@@ -54,7 +54,7 @@ codon and therefore no gene, return the empty string.
 		
 		int taa = findStopCodon(dna, start, "TAA");
 		int tag = findStopCodon(dna, start, "TAG");
-		int tga = findStopCodon(dna, start, "AGA");
+		int tga = findStopCodon(dna, start, "TGA");
 		int tp =  Math.min(taa, tag);
 		int closest = Math.min(tga, tp);
 		if (closest == dna.length()) {
@@ -72,9 +72,42 @@ Print the DNA string.
 
 Calculate the gene by sending this DNA string as an argument to findGene. If a gene exists following our algorithm above, then print the gene, otherwise print the empty string.
 	 */
+	
 	public void testFindGene() {
-		String a = "ATGAAATAA";
+		String a = "AATGCTAACTAGCTGACTAAT";
 		System.out.println(findGene(a));
+	}
+	
+	public String findNextGene(String dna, int next) {
+		int start = dna.indexOf("ATG", next);
+		if (start == -1) {
+			return "";
+		}
+		
+		int taa = findStopCodon(dna, start, "TAA");
+		int tag = findStopCodon(dna, start, "TAG");
+		int tga = findStopCodon(dna, start, "AGA");
+		int tp =  Math.min(taa, tag);
+		int closest = Math.min(tga, tp);
+		if (closest == dna.length()) {
+			return "";
+		}
+		else {
+			return dna.substring(start, closest+3);
+		}
+		
+	}
+	
+	public void printAllGenes(String dna) {
+		int start = 0;
+		while (true) {
+			String gene = findNextGene(dna, start);
+			if (gene.isEmpty()) {
+				return;
+			}
+			System.out.println(gene);
+			start = dna.indexOf(gene, start)+gene.length();
+		}
 	}
 	
 	public static void main(String[] args) {
